@@ -14,5 +14,5 @@ torchdata
 #### import2.py 실행시켜도 됨.
 
 
-참고사항
-eval.py : hit1 밖에 없음
+### 참고사항
+#### eval.py : hit1 밖에 없음
