@@ -5,9 +5,9 @@ import torchdata
 import torch.nn as nn
 import torch.optim as optim
 
-from model import DeepCNN1D6 as DeepCNN1D #모델 임포트
-from data_loader import create_dataloader
-
+from video_models import DeepCNN1D6 as DeepCNN1D #모델 임포트
+from video_data_loader import create_dataloader
+from eval import calculate_hit_at_one
 
 dataloader = create_dataloader(1024,'train')
 
@@ -25,7 +25,7 @@ model_save_path = "yt8m_ckpt/model7.ckpt"
 num_epochs = 100
 for epoch in range(num_epochs):
     total_loss = 0
-    for batch in dataloader:
+    for i, batch in enumerate(dataloader):
         # 데이터 및 레이블 가져오기
         mean_audio, mean_rgb, labels = batch['mean_audio'], batch['mean_rgb'], batch['labels']
         mean_audio = mean_audio.to(device)
@@ -40,6 +40,8 @@ for epoch in range(num_epochs):
         optimizer.step()
 
         total_loss += loss.item()
+        print("loss : ", loss.item())
+        print("hit1 : ", calculate_hit_at_one(torch.sigmoid(outputs), labels))
 
     # 에폭마다 손실 출력
     print(f"Epoch {epoch+1}, Loss: {total_loss}")
