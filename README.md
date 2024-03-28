@@ -16,7 +16,7 @@ torchdata
 
 ### 참고사항
 #### 완성도 낮음
-#### eval.py : hit1 밖에 없음
+#### eval.py : map빼고 구현
 #### video와 frame py파일 분리 되어 있음
 #### models에 모델 클래스를 정의해서 불러오는 방식
 
