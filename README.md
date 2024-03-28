@@ -16,7 +16,7 @@ torchdata
 
 ### 참고사항
 #### 완성도 낮음
-#### eval.py : map빼고 구현
+#### eval.py : gap hit1 perr map 다 구현하긴 했지만 map이 높게 나와서 검증 필요
 #### video와 frame py파일 분리 되어 있음
 #### models에 모델 클래스를 정의해서 불러오는 방식
 
