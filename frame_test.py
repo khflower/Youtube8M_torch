@@ -8,7 +8,7 @@ import torch.optim as optim
 
 from frame_models import FrameAverageLogisticRegression as FrameAverageLogisticRegression #모델 임포트
 from frame_data_loader import create_dataloader
-from eval import calculate_hit_at_one, calculate_precision_at_equal_recall_rate_torch, calculate_gap_torch
+from eval import calculate_hit_at_one, calculate_precision_at_equal_recall_rate_torch, calculate_gap_torch, calculate_map_torch
 
 test_dataloader = create_dataloader(512,'vaildate')
 
@@ -51,9 +51,11 @@ def evaluate(model, dataloader):
             hit1s += calculate_hit_at_one(pre_predicted, labels)
             gap += calculate_gap_torch(pre_predicted, labels)
             perr += calculate_precision_at_equal_recall_rate_torch(pre_predicted, labels)
+            map += calculate_map_torch(pre_predicted, labels)
             print("\n 평균 hit1s", hit1s/(i+1))
             print("\n 평균 gap", gap/(i+1))
             print("\n 평균 perr", perr/(i+1))
+            print("\n 평균 map", map/(i+1))
 
 
             total_samples += labels.size(0)

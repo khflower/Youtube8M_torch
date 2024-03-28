@@ -111,3 +111,40 @@ def average_precision(output, target):
     ap = (precision[1:] * torch.diff(recall)).sum()
     
     return ap.item()
+
+
+
+
+
+def calculate_map_torch(predictions, actuals, device=None):
+    if device is None:
+        device = predictions.device
+
+    num_videos = predictions.size(0)
+    map_score = 0.0
+
+    for i in range(num_videos):
+        video_preds = predictions[i].to(device)  # 디바이스로 이동
+        video_actuals = actuals[i].to(device)  # 디바이스로 이동
+
+        # 예측값에 대해 내림차순으로 정렬하고, 실제값을 예측 순서에 맞게 재정렬한다.
+        _, indices = torch.sort(video_preds, descending=True)
+        sorted_actuals = video_actuals[indices]
+
+        # 정답 위치를 찾는다.
+        relevant_indices = torch.nonzero(sorted_actuals, as_tuple=False).view(-1)
+        if relevant_indices.nelement() == 0:
+            continue  # 정답이 없는 경우 건너뛴다.
+
+        # Precision-at-K 계산
+        cum_corrects = torch.cumsum(sorted_actuals, dim=0)
+        precision_at_k = cum_corrects[relevant_indices] / (relevant_indices + 1)
+
+        # Average Precision 계산
+        average_precision = precision_at_k.mean().item()
+        
+        map_score += average_precision
+
+    map_score = map_score / num_videos if num_videos > 0 else 0.0
+
+    return map_score
